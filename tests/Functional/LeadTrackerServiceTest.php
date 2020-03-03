@@ -2,6 +2,8 @@
 
 namespace Railroad\LeadTracker\Tests\Functional;
 
+use Carbon\Carbon;
+use Railroad\LeadTracker\Events\LeadTracked;
 use Railroad\LeadTracker\Services\LeadTrackerService;
 use Railroad\LeadTracker\Tests\LeadTrackerTestCase;
 
@@ -33,6 +35,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 'utm_term' => $this->faker->words(2, true),
             ];
 
+        $this->expectsEvents([LeadTracked::class]);
+
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
             $data['maropost_tag_name'],
@@ -44,7 +48,11 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
             $data['utm_term']
         );
 
-        $this->assertTrue($inserted);
+        $this->assertEquals(
+            array_merge(['id' => 1, 'submitted_at' => Carbon::now()->toDateTimeString()], $data),
+            $inserted
+        );
+
         $this->assertDatabaseHas('leadtracker_leads', $data);
     }
 
@@ -62,16 +70,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 'utm_term' => $this->faker->words(2, true),
             ];
 
-        $inserted = $this->leadTrackerService->trackLead(
-            $data['email'],
-            $data['maropost_tag_name'],
-            $data['form_name'],
-            $data['form_page_url'],
-            $data['utm_source'],
-            $data['utm_medium'],
-            $data['utm_campaign'],
-            $data['utm_term']
-        );
+        $this->expectsEvents([LeadTracked::class]);
 
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
@@ -84,7 +83,22 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
             $data['utm_term']
         );
 
-        $this->assertTrue($inserted);
+        $inserted = $this->leadTrackerService->trackLead(
+            $data['email'],
+            $data['maropost_tag_name'],
+            $data['form_name'],
+            $data['form_page_url'],
+            $data['utm_source'],
+            $data['utm_medium'],
+            $data['utm_campaign'],
+            $data['utm_term']
+        );
+
+        $this->assertEquals(
+            array_merge(['id' => 1, 'submitted_at' => Carbon::now()->toDateTimeString()], $data),
+            $inserted
+        );
+
         $this->assertDatabaseHas('leadtracker_leads', $data);
         $this->assertDatabaseMissing('leadtracker_leads', ['id' => 2]);
     }

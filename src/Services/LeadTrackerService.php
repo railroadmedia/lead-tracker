@@ -7,6 +7,7 @@ namespace Railroad\LeadTracker\Services;
 use Carbon\Carbon;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
+use Railroad\LeadTracker\Events\LeadTracked;
 
 class LeadTrackerService
 {
@@ -31,6 +32,8 @@ class LeadTrackerService
     }
 
     /**
+     * Returns the info inserted or that already existed in the database as an array.
+     *
      * @param string $email
      * @param string $maropostTagName
      * @param string $formName
@@ -39,7 +42,7 @@ class LeadTrackerService
      * @param string|null $utmMedium
      * @param string|null $utmCampaign
      * @param string|null $utmTerm
-     * @return bool
+     * @return array
      */
     public function trackLead(
         $email,
@@ -64,7 +67,7 @@ class LeadTrackerService
         ];
 
         if (!$this->databaseConnection->table('leadtracker_leads')->where($dataArray)->exists()) {
-            return $this->databaseConnection->table('leadtracker_leads')->insert(
+            $this->databaseConnection->table('leadtracker_leads')->insert(
                 [
                     'email' => $email,
                     'maropost_tag_name' => $maropostTagName,
@@ -79,6 +82,10 @@ class LeadTrackerService
             );
         }
 
-        return true;
+        $databaseArray = (array)$this->databaseConnection->table('leadtracker_leads')->where($dataArray)->first();
+
+        event(new LeadTracked($databaseArray));
+
+        return $databaseArray;
     }
 }

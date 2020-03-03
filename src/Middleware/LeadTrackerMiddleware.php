@@ -41,9 +41,9 @@ class LeadTrackerMiddleware
                 if (strtolower($request->getMethod()) == strtolower($requestToCaptureData['method']) &&
                     strtolower($request->path()) == strtolower(trim($requestToCaptureData['path'], '/'))) {
 
-                    if (empty($request->get('email')) ||
-                        empty($request->get('maropost_tag_name')) ||
-                        empty($request->get('form_name'))) {
+                    if (empty($request->get('leadtracker_email')) ||
+                        empty($request->get('leadtracker_maropost_tag_name')) ||
+                        empty($request->get('leadtracker_form_name'))) {
 
                         // we cannot track this request due to missing information
                         error_log('Failed to track lead (LeadTracker) some required data is missing from the request.');
@@ -52,15 +52,16 @@ class LeadTrackerMiddleware
                         return $next($request);
                     }
 
+                    // todo: add prefix so we dont steal other inputs when making them on the FE
                     $this->leadTrackerService->trackLead(
-                        $request->get('email'),
-                        $request->get('maropost_tag_name'),
-                        $request->get('form_name'),
+                        $request->get('leadtracker_email'),
+                        $request->get('leadtracker_maropost_tag_name'),
+                        $request->get('leadtracker_form_name'),
                         $request->fullUrl(),
-                        $request->get('utm_source'),
-                        $request->get('utm_medium'),
-                        $request->get('utm_campaign'),
-                        $request->get('utm_term')
+                        $request->get('leadtracker_utm_source'),
+                        $request->get('leadtracker_utm_medium'),
+                        $request->get('leadtracker_utm_campaign'),
+                        $request->get('leadtracker_utm_term')
                     );
 
                     return $next($request);
