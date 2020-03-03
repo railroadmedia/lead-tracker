@@ -18,6 +18,8 @@ A new row in the tracking table should also be created with the data that was in
 id
 email
 maropost_tag_name
+form_page_url
+form_name
 utm_source (can be empty)
 utm_medium (can be empty)
 utm_campaign (can be empty)
@@ -39,6 +41,7 @@ The request should have the following input variables:
 ```text
 email (required)
 maropost_tag_name (required)
+form_name (required)
 utm_source (can be empty)
 utm_medium (can be empty)
 utm_campaign (can be empty)

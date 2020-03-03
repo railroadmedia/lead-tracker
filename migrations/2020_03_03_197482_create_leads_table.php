@@ -19,21 +19,21 @@ class CreateLeadsTable extends Migration
                 $table->charset = config('lead-tracker.charset');
                 $table->collation = config('lead-tracker.collation');
 
-                $table->bigIncrements('id');
+                $table->increments('id');
 
-                $table->string('uuid', 64)->unique()->index();
-                $table->string('cookie_id', 64)->index()->nullable();
+                $table->string('email')->index();
 
-                $table->unsignedBigInteger('user_id')->unsigned()->index()->nullable();
+                $table->string('maropost_tag_name')->index();
 
-                $table->string('url_protocol', 32)->index();
-                $table->string('url_domain', 128)->index();
-                $table->string('url_path', 191)->index();
+                $table->string('form_name')->index();
+                $table->text('form_page_url')->index();
 
-                $table->string('referer_url_protocol', 32)->index()->nullable();
-                $table->string('referer_url_domain', 128)->index()->nullable();
-                $table->string('referer_url_path', 191)->index()->nullable();
+                $table->string('utm_source')->index();
+                $table->string('utm_medium')->index();
+                $table->string('utm_campaign')->index();
+                $table->string('utm_term')->index();
 
+                $table->timestamp('submitted_at')->index();
             }
         );
     }

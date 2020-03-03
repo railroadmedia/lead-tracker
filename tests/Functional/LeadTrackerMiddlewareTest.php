@@ -10,16 +10,45 @@ class AccessCodeJsonControllerTest extends LeadTrackerTestCase
 {
     public function test_test()
     {
-        $request = new Request;
+        $formPath = '/test-path';
+        $formUrl = 'https://www.leadtracker.com' . $formPath;
 
-        $request->merge([
-            'title' => 'Title is in mixed CASE'
-        ]);
+        config()->set(
+            'lead-tracker.requests_to_capture',
+            [
+                [
+                    'path' => $formPath,
+                    'method' => 'post',
+                ],
+            ]
+        );
 
-        $middleware = new LeadTrackerMiddleware();
+        $data =
+            [
+                'email' => $this->faker->email,
+                'maropost_tag_name' => $this->faker->words(2, true),
+                'form_name' => $this->faker->words(2, true),
+                'form_page_url' => $formUrl,
+                'utm_source' => $this->faker->word . rand(),
+                'utm_medium' => $this->faker->word . rand(),
+                'utm_campaign' => $this->faker->word . rand(),
+                'utm_term' => $this->faker->words(2, true),
+            ];
 
-        $middleware->handle($request, function ($req) {
-            $this->assertEquals(true, true);
-        });
+        $request = Request::create($formUrl, 'POST', $data);
+
+        /**
+         * @var $middleware LeadTrackerMiddleware
+         */
+        $middleware = app()->make(LeadTrackerMiddleware::class);
+
+        $middleware->handle(
+            $request,
+            function ($req) {
+                $this->assertEquals(true, true);
+            }
+        );
+
+        $this->assertDatabaseHas('leadtracker_leads', $data);
     }
 }
