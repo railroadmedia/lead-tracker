@@ -1,7 +1,7 @@
 # Lead Tracker
 Tracks email form submissions and marketing data for visitor origins.
 
-# How It Works
+## How It Works
 
 1. A potential customer clicks a link in one of our marketing emails or an ad which sends them to a lead gen
 page on one of our sites. The URL will generally have tracking info in the parameters. Examples: 
@@ -24,11 +24,23 @@ utm_campaign (can be empty)
 utm_term (can be empty)
 ```
 
-3. In order to do this the form needs to read from the URL and add that data as input info for the form.
+##  The system
+In order to do this the form needs to read from the URL and add that data as input info for the form.
 
-4. We will use middleware to capture the normal requests which only create and tag a maropost contact. The forms POST
+We will use middleware to capture the normal requests which only create and tag a maropost contact. The forms POST
 to here so we'll capture that request by configuration and create the row first using this package:
 
 ```text
 /maropost/form/sync-contact
+```
+
+The request should have the following input variables:
+
+```text
+email (required)
+maropost_tag_name (required)
+utm_source (can be empty)
+utm_medium (can be empty)
+utm_campaign (can be empty)
+utm_term (can be empty)
 ```
