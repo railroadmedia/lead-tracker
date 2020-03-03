@@ -10,6 +10,9 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
 {
     public function test_capture_request_success()
     {
+        $brand = $this->faker->word;
+        config()->set('lead-tracker.brand', $brand);
+
         $formPath = '/test-path';
         $formUrl = 'https://www.leadtracker.com' . $formPath;
 
@@ -36,6 +39,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
 
         $dataWithoutPrefix =
             [
+                'brand' => $brand,
                 'email' => $data['leadtracker_email'],
                 'maropost_tag_name' => $data['leadtracker_maropost_tag_name'],
                 'form_name' => $data['leadtracker_form_name'],

@@ -76,12 +76,6 @@ class LeadTrackerTestCase extends BaseTestCase
             ]
         );
 
-        config()->set('lead-tracker.database_driver', 'pdo_sqlite');
-        config()->set('lead-tracker.database_user', 'root');
-        config()->set('lead-tracker.database_password', 'root');
-        config()->set('lead-tracker.database_in_memory', true);
-        config()->set('lead-tracker.data_mode', 'host');
-
         if (empty(config('lead-tracker.charset'))) {
             config()->set('lead-tracker.charset', 'utf8mb4');
         }

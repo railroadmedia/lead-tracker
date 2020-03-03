@@ -56,6 +56,7 @@ class LeadTrackerService
     )
     {
         $dataArray = [
+            'brand' => config('lead-tracker.brand'),
             'email' => $email,
             'maropost_tag_name' => $maropostTagName,
             'form_name' => $formName,
@@ -68,17 +69,12 @@ class LeadTrackerService
 
         if (!$this->databaseConnection->table('leadtracker_leads')->where($dataArray)->exists()) {
             $this->databaseConnection->table('leadtracker_leads')->insert(
-                [
-                    'email' => $email,
-                    'maropost_tag_name' => $maropostTagName,
-                    'form_name' => $formName,
-                    'form_page_url' => $formUrl,
-                    'utm_source' => $utmSource,
-                    'utm_medium' => $utmMedium,
-                    'utm_campaign' => $utmCampaign,
-                    'utm_term' => $utmTerm,
-                    'submitted_at' => Carbon::now()->toDateTimeString(),
-                ]
+                array_merge(
+                    $dataArray,
+                    [
+                        'submitted_at' => Carbon::now()->toDateTimeString(),
+                    ]
+                )
             );
         }
 

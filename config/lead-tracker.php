@@ -6,14 +6,7 @@ return [
 
     // database
     'database_connection_name' => 'mysql',
-    'database_name' => 'mydb',
-    'database_user' => 'root',
-    'database_password' => 'root',
-    'database_host' => 'mysql',
-    'database_driver' => 'pdo_mysql',
-    'database_in_memory' => false,
     'data_mode' => 'host', // 'host' or 'client', hosts do the db migrations, clients do not
-
     'charset' => 'utf8mb4',
     'collation' => 'utf8mb4_bin',
 

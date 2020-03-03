@@ -23,6 +23,9 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
 
     public function test_track_lead_success()
     {
+        $brand = $this->faker->word;
+        config()->set('lead-tracker.brand', $brand);
+
         $data =
             [
                 'email' => $this->faker->email,
@@ -49,7 +52,49 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         );
 
         $this->assertEquals(
-            array_merge(['id' => 1, 'submitted_at' => Carbon::now()->toDateTimeString()], $data),
+            array_merge(['id' => 1, 'submitted_at' => Carbon::now()->toDateTimeString(), 'brand' => $brand], $data),
+            $inserted
+        );
+
+        $this->assertDatabaseHas('leadtracker_leads', $data);
+    }
+
+    public function test_track_lead_success_with_null()
+    {
+        $data =
+            [
+                'email' => $this->faker->email,
+                'maropost_tag_name' => $this->faker->words(2, true),
+                'form_name' => $this->faker->words(2, true),
+                'form_page_url' => $this->faker->url,
+                'utm_source' => null,
+                'utm_medium' => null,
+                'utm_campaign' => null,
+                'utm_term' => null,
+            ];
+
+        $this->expectsEvents([LeadTracked::class]);
+
+        $inserted = $this->leadTrackerService->trackLead(
+            $data['email'],
+            $data['maropost_tag_name'],
+            $data['form_name'],
+            $data['form_page_url'],
+            $data['utm_source'],
+            $data['utm_medium'],
+            $data['utm_campaign'],
+            $data['utm_term']
+        );
+
+        $this->assertEquals(
+            array_merge(
+                [
+                    'id' => 1,
+                    'submitted_at' => Carbon::now()->toDateTimeString(),
+                    'brand' => null,
+                ],
+                $data
+            ),
             $inserted
         );
 
@@ -58,6 +103,9 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
 
     public function test_track_lead_no_duplicates()
     {
+        $brand = $this->faker->word;
+        config()->set('lead-tracker.brand', $brand);
+
         $data =
             [
                 'email' => $this->faker->email,
@@ -95,7 +143,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         );
 
         $this->assertEquals(
-            array_merge(['id' => 1, 'submitted_at' => Carbon::now()->toDateTimeString()], $data),
+            array_merge(['id' => 1, 'submitted_at' => Carbon::now()->toDateTimeString(), 'brand' => $brand], $data),
             $inserted
         );
 
