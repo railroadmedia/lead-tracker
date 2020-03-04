@@ -22,31 +22,28 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 [
                     'path' => $formPath,
                     'method' => 'post',
+                    'input_data_map' => [
+                        'email' => 'my_email_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'form_name' => 'my_form_name_input_name',
+                        'utm_source' => 'my_utm_source_input_name',
+                        'utm_medium' => 'my_utm_medium_input_name',
+                        'utm_campaign' => 'my_utm_campaign_input_name',
+                        'utm_term' => 'my_utm_term_input_name',
+                    ],
                 ],
             ]
         );
 
         $data =
             [
-                'leadtracker_email' => $this->faker->email,
-                'leadtracker_maropost_tag_name' => $this->faker->words(2, true),
-                'leadtracker_form_name' => $this->faker->words(2, true),
-                'leadtracker_utm_source' => $this->faker->word . rand(),
-                'leadtracker_utm_medium' => $this->faker->word . rand(),
-                'leadtracker_utm_campaign' => $this->faker->word . rand(),
-                'leadtracker_utm_term' => $this->faker->words(2, true),
-            ];
-
-        $dataWithoutPrefix =
-            [
-                'brand' => $brand,
-                'email' => $data['leadtracker_email'],
-                'maropost_tag_name' => $data['leadtracker_maropost_tag_name'],
-                'form_name' => $data['leadtracker_form_name'],
-                'utm_source' => $data['leadtracker_utm_source'],
-                'utm_medium' => $data['leadtracker_utm_medium'],
-                'utm_campaign' => $data['leadtracker_utm_campaign'],
-                'utm_term' => $data['leadtracker_utm_term'],
+                'my_email_input_name' => $this->faker->email,
+                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
+                'my_form_name_input_name' => $this->faker->words(2, true),
+                'my_utm_source_input_name' => $this->faker->word . rand(),
+                'my_utm_medium_input_name' => $this->faker->word . rand(),
+                'my_utm_campaign_input_name' => $this->faker->word . rand(),
+                'my_utm_term_input_name' => $this->faker->words(2, true),
             ];
 
         $request = Request::create($formUrl, 'POST', $data);
@@ -63,7 +60,19 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
             }
         );
 
-        $this->assertDatabaseHas('leadtracker_leads', $dataWithoutPrefix);
+        $this->assertDatabaseHas(
+            'leadtracker_leads',
+            [
+                'brand' => $brand,
+                'email' => $data['my_email_input_name'],
+                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
+                'form_name' => $data['my_form_name_input_name'],
+                'utm_source' => $data['my_utm_source_input_name'],
+                'utm_medium' => $data['my_utm_medium_input_name'],
+                'utm_campaign' => $data['my_utm_campaign_input_name'],
+                'utm_term' => $data['my_utm_term_input_name'],
+            ]
+        );
     }
 
     public function test_capture_request_no_match()
@@ -77,6 +86,15 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 [
                     'path' => $formPath . '-3',
                     'method' => 'get',
+                    'input_data_map' => [
+                        'email' => 'leadtracker_email',
+                        'maropost_tag_name' => 'leadtracker_maropost_tag_name',
+                        'form_name' => 'leadtracker_form_name',
+                        'utm_source' => 'leadtracker_utm_source',
+                        'utm_medium' => 'leadtracker_utm_medium',
+                        'utm_campaign' => 'leadtracker_utm_campaign',
+                        'utm_term' => 'leadtracker_utm_term',
+                    ],
                 ],
             ]
         );
@@ -131,6 +149,15 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 [
                     'path' => $formPath,
                     'method' => 'post',
+                    'input_data_map' => [
+                        'email' => 'leadtracker_email',
+                        'maropost_tag_name' => 'leadtracker_maropost_tag_name',
+                        'form_name' => 'leadtracker_form_name',
+                        'utm_source' => 'leadtracker_utm_source',
+                        'utm_medium' => 'leadtracker_utm_medium',
+                        'utm_campaign' => 'leadtracker_utm_campaign',
+                        'utm_term' => 'leadtracker_utm_term',
+                    ],
                 ],
             ]
         );

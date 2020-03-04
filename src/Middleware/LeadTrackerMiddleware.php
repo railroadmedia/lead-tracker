@@ -34,6 +34,7 @@ class LeadTrackerMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        // we'll wrap the entire thing in a try catch since we do not want this system to ever stop execution
         try {
 
             foreach (config('lead-tracker.requests_to_capture') as $requestToCaptureData) {
@@ -41,9 +42,26 @@ class LeadTrackerMiddleware
                 if (strtolower($request->getMethod()) == strtolower($requestToCaptureData['method']) &&
                     strtolower($request->path()) == strtolower(trim($requestToCaptureData['path'], '/'))) {
 
-                    if (empty($request->get('leadtracker_email')) ||
-                        empty($request->get('leadtracker_maropost_tag_name')) ||
-                        empty($request->get('leadtracker_form_name'))) {
+                    // load data map
+                    $inputDataMap = $requestToCaptureData['input_data_map'];
+
+                    // fail if there is no input map
+                    if (empty($inputDataMap)) {
+                        error_log('Failed to track lead (LeadTracker) input data map is missing for request.');
+                        error_log(
+                            'Path: ' .
+                            $requestToCaptureData['path'] .
+                            ' - Request data: ' .
+                            var_export($request->all(), true)
+                        );
+
+                        return $next($request);
+                    }
+
+                    // check all the data we need exists
+                    if (empty($request->get($inputDataMap['email'])) ||
+                        empty($request->get($inputDataMap['maropost_tag_name'])) ||
+                        empty($request->get($inputDataMap['form_name']))) {
 
                         // we cannot track this request due to missing information
                         error_log('Failed to track lead (LeadTracker) some required data is missing from the request.');
@@ -52,16 +70,15 @@ class LeadTrackerMiddleware
                         return $next($request);
                     }
 
-                    // todo: add prefix so we dont steal other inputs when making them on the FE
                     $this->leadTrackerService->trackLead(
-                        $request->get('leadtracker_email'),
-                        $request->get('leadtracker_maropost_tag_name'),
-                        $request->get('leadtracker_form_name'),
+                        $request->get($inputDataMap['email']),
+                        $request->get($inputDataMap['maropost_tag_name']),
+                        $request->get($inputDataMap['form_name']),
                         $request->fullUrl(),
-                        $request->get('leadtracker_utm_source'),
-                        $request->get('leadtracker_utm_medium'),
-                        $request->get('leadtracker_utm_campaign'),
-                        $request->get('leadtracker_utm_term')
+                        $request->get($inputDataMap['utm_source']),
+                        $request->get($inputDataMap['utm_medium']),
+                        $request->get($inputDataMap['utm_campaign']),
+                        $request->get($inputDataMap['utm_term'])
                     );
 
                     return $next($request);

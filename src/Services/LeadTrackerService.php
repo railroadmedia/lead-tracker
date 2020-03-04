@@ -84,4 +84,9 @@ class LeadTrackerService
 
         return $databaseArray;
     }
+
+    public static function getRequestTrackingData($maropostTagName, $formName)
+    {
+
+    }
 }
