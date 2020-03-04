@@ -49,7 +49,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         );
 
         $request = Request::create($formSubmitUrl, 'POST', $data);
-        $request->headers->set('HTTP_REFERRER', $formPageUrl);
+        $request->headers->set('referer', $formPageUrl);
 
         /**
          * @var $middleware LeadTrackerMiddleware
@@ -206,7 +206,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         );
 
         $request = Request::create($formUrl, 'POST', $data);
-        $request->headers->set('HTTP_REFERRER', $formPageUrl);
+        $request->headers->set('referer', $formPageUrl);
 
         /**
          * @var $middleware LeadTrackerMiddleware
