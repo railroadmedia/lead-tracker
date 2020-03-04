@@ -85,8 +85,79 @@ class LeadTrackerService
         return $databaseArray;
     }
 
-    public static function getRequestTrackingData($maropostTagName, $formName)
+    /**
+     * This returns all the form data that should be sent with the form submit request to be captured by LeadTracker.
+     * The only input varaible that is not returned here is the email since that's the input field on the page.
+     *
+     * [inputName => inputValue]
+     *
+     * @param $formSubmitPath
+     * @param $formSubmitMethod
+     * @param $maropostTagName
+     * @param $formName
+     * @return array
+     */
+    public static function getRequestTrackingInputArrayFromRequest(
+        $formSubmitPath,
+        $formSubmitMethod,
+        $maropostTagName,
+        $formName
+    )
     {
+        $request = request();
 
+        foreach (config('lead-tracker.requests_to_capture') as $requestToCaptureData) {
+
+            if (strtolower($formSubmitMethod) == strtolower($requestToCaptureData['method']) &&
+                strtolower(trim($formSubmitPath, '/')) == strtolower(trim($requestToCaptureData['path'], '/'))) {
+
+                $inputDataMap = $requestToCaptureData['input_data_map'];
+
+                return [
+                    $inputDataMap['maropost_tag_name'] => $maropostTagName,
+                    $inputDataMap['form_name'] => $formName,
+                    $inputDataMap['utm_source'] => $request->get('utm_source'),
+                    $inputDataMap['utm_medium'] => $request->get('utm_medium'),
+                    $inputDataMap['utm_campaign'] => $request->get('utm_campaign'),
+                    $inputDataMap['utm_term'] => $request->get('utm_term'),
+                ];
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * This returns all the form inputs HTML that should be in the form to be captured by LeadTracker.
+     *
+     * @param $formSubmitPath
+     * @param $formSubmitMethod
+     * @param $maropostTagName
+     * @param $formName
+     * @return string
+     */
+    public static function getRequestTrackingInputsHtmlFromRequest(
+        $formSubmitPath,
+        $formSubmitMethod,
+        $maropostTagName,
+        $formName
+    )
+    {
+        $inputArray = self::getRequestTrackingInputArrayFromRequest(
+            $formSubmitPath,
+            $formSubmitMethod,
+            $maropostTagName,
+            $formName
+        );
+
+        $html = '';
+
+        foreach ($inputArray as $inputName => $inputValue) {
+            if (!empty($inputValue)) {
+                $html .= "<input type='hidden' name='$inputName' value='$inputValue'>\n";
+            }
+        }
+
+        return $html;
     }
 }
