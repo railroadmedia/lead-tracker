@@ -77,7 +77,7 @@ class LeadTrackerMiddleware
                         $request->get($inputDataMap['email']),
                         $request->get($inputDataMap['maropost_tag_name']),
                         $request->get($inputDataMap['form_name']),
-                        $request->fullUrl(),
+                        $request->header('HTTP_REFERRER', ''),
                         $request->get($inputDataMap['utm_source']),
                         $request->get($inputDataMap['utm_medium']),
                         $request->get($inputDataMap['utm_campaign']),

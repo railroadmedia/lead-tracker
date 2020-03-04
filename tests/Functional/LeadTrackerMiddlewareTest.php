@@ -14,7 +14,8 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         config()->set('lead-tracker.brand', $brand);
 
         $formPath = '/test-path';
-        $formUrl = 'https://www.leadtracker.com' . $formPath;
+        $formSubmitUrl = 'https://www.leadtracker.com' . $formPath;
+        $formPageUrl = 'https://www.leadtracker.com/my-lead-form';
 
         $data =
             [
@@ -47,7 +48,8 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
             ]
         );
 
-        $request = Request::create($formUrl, 'POST', $data);
+        $request = Request::create($formSubmitUrl, 'POST', $data);
+        $request->headers->set('HTTP_REFERRER', $formPageUrl);
 
         /**
          * @var $middleware LeadTrackerMiddleware
@@ -68,6 +70,76 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 'email' => $data['my_email_input_name'],
                 'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
                 'form_name' => $data['my_form_name_input_name'],
+                'form_page_url' => $formPageUrl,
+                'utm_source' => $data['my_utm_source_input_name'],
+                'utm_medium' => $data['my_utm_medium_input_name'],
+                'utm_campaign' => $data['my_utm_campaign_input_name'],
+                'utm_term' => $data['my_utm_term_input_name'],
+            ]
+        );
+    }
+    public function test_capture_request_success_no_referer()
+    {
+        $brand = $this->faker->word;
+        config()->set('lead-tracker.brand', $brand);
+
+        $formPath = '/test-path';
+        $formSubmitUrl = 'https://www.leadtracker.com' . $formPath;
+        $formPageUrl = '';
+
+        $data =
+            [
+                'my_email_input_name' => $this->faker->email,
+                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
+                'my_form_name_input_name' => $this->faker->words(2, true),
+                'my_utm_source_input_name' => $this->faker->word . rand(),
+                'my_utm_medium_input_name' => $this->faker->word . rand(),
+                'my_utm_campaign_input_name' => $this->faker->word . rand(),
+                'my_utm_term_input_name' => $this->faker->words(2, true),
+            ];
+
+        config()->set(
+            'lead-tracker.requests_to_capture',
+            [
+                [
+                    'path' => $formPath,
+                    'method' => 'post',
+                    'form_name' => $data['my_form_name_input_name'],
+                    'input_data_map' => [
+                        'email' => 'my_email_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'form_name' => 'my_form_name_input_name',
+                        'utm_source' => 'my_utm_source_input_name',
+                        'utm_medium' => 'my_utm_medium_input_name',
+                        'utm_campaign' => 'my_utm_campaign_input_name',
+                        'utm_term' => 'my_utm_term_input_name',
+                    ],
+                ],
+            ]
+        );
+
+        $request = Request::create($formSubmitUrl, 'POST', $data);
+
+        /**
+         * @var $middleware LeadTrackerMiddleware
+         */
+        $middleware = app()->make(LeadTrackerMiddleware::class);
+
+        $middleware->handle(
+            $request,
+            function ($req) {
+                $this->assertEquals(true, true);
+            }
+        );
+
+        $this->assertDatabaseHas(
+            'leadtracker_leads',
+            [
+                'brand' => $brand,
+                'email' => $data['my_email_input_name'],
+                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
+                'form_name' => $data['my_form_name_input_name'],
+                'form_page_url' => $formPageUrl,
                 'utm_source' => $data['my_utm_source_input_name'],
                 'utm_medium' => $data['my_utm_medium_input_name'],
                 'utm_campaign' => $data['my_utm_campaign_input_name'],
@@ -85,6 +157,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         $formUrl = 'https://www.leadtracker.com' . $formPath;
         $formName = 'my-form-1';
         $formMethod = 'post';
+        $formPageUrl = 'https://www.leadtracker.com/my-lead-form';
 
         $data =
             [
@@ -133,6 +206,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         );
 
         $request = Request::create($formUrl, 'POST', $data);
+        $request->headers->set('HTTP_REFERRER', $formPageUrl);
 
         /**
          * @var $middleware LeadTrackerMiddleware
@@ -153,6 +227,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 'email' => $data['my_email_input_name'],
                 'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
                 'form_name' => $data['my_form_name_input_name'],
+                'form_page_url' => $formPageUrl,
                 'utm_source' => $data['my_utm_source_input_name'],
                 'utm_medium' => $data['my_utm_medium_input_name'],
                 'utm_campaign' => $data['my_utm_campaign_input_name'],

@@ -37,7 +37,7 @@ class LeadTrackerService
      * @param string $email
      * @param string $maropostTagName
      * @param string $formName
-     * @param string $formUrl
+     * @param string $formPageUrl
      * @param string|null $utmSource
      * @param string|null $utmMedium
      * @param string|null $utmCampaign
@@ -48,7 +48,7 @@ class LeadTrackerService
         $email,
         $maropostTagName,
         $formName,
-        $formUrl,
+        $formPageUrl,
         $utmSource = null,
         $utmMedium = null,
         $utmCampaign = null,
@@ -60,7 +60,7 @@ class LeadTrackerService
             'email' => $email,
             'maropost_tag_name' => $maropostTagName,
             'form_name' => $formName,
-            'form_page_url' => $formUrl,
+            'form_page_url' => $formPageUrl,
             'utm_source' => $utmSource,
             'utm_medium' => $utmMedium,
             'utm_campaign' => $utmCampaign,
