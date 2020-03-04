@@ -3,7 +3,6 @@
 namespace Railroad\LeadTracker\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Redis;
 
 class LeadTrackerServiceProvider extends ServiceProvider
 {
@@ -22,6 +21,8 @@ class LeadTrackerServiceProvider extends ServiceProvider
             ]
         );
 
-        $this->loadMigrationsFrom(__DIR__ . '/../../migrations');
+        if (config('lead-tracker.data_mode') == 'host') {
+            $this->loadMigrationsFrom(__DIR__ . '/../../migrations');
+        }
     }
 }
