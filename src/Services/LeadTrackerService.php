@@ -109,7 +109,8 @@ class LeadTrackerService
         foreach (config('lead-tracker.requests_to_capture') as $requestToCaptureData) {
 
             if (strtolower($formSubmitMethod) == strtolower($requestToCaptureData['method']) &&
-                strtolower(trim($formSubmitPath, '/')) == strtolower(trim($requestToCaptureData['path'], '/'))) {
+                strtolower(trim($formSubmitPath, '/')) == strtolower(trim($requestToCaptureData['path'], '/')) &&
+                strtolower($formName) == strtolower($requestToCaptureData['form_name'])) {
 
                 $inputDataMap = $requestToCaptureData['input_data_map'];
 

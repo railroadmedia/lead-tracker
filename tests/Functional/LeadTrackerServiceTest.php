@@ -165,6 +165,20 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 [
                     'path' => $formPath,
                     'method' => $formMethod,
+                    'form_name' => 'other-form-name-not-to-track',
+                    'input_data_map' => [
+                        'email' => 'other_my_email_input_name',
+                        'maropost_tag_name' => 'other_my_maropost_tag_name_input_name',
+                        'form_name' => 'other_my_form_name_input_name',
+                        'utm_source' => 'other_my_utm_source_input_name',
+                        'utm_medium' => 'other_my_utm_medium_input_name',
+                        'utm_campaign' => 'other_my_utm_campaign_input_name',
+                        'utm_term' => 'other_my_utm_term_input_name',
+                    ],
+                ],
+                [
+                    'path' => $formPath,
+                    'method' => $formMethod,
                     'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
