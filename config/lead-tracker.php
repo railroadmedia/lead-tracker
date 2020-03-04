@@ -16,8 +16,10 @@ return [
     // by the package
     'requests_to_capture' => [
         [
+            // these 3 are used to match the request
             'path' => '/my-form-submission-path',
             'method' => 'post',
+            'form_name' => 'my-lead-form-1',
 
             // since different forms may have different input names it must be configurable
             // these keys must all be set for every request you wish to capture
@@ -34,6 +36,7 @@ return [
         [
             'path' => '/my-other-form-submission-path',
             'method' => 'put',
+            'form_name' => 'my-lead-form-2',
 
             'input_data_map' => [
                 'email' => 'my_other_email_input_name',

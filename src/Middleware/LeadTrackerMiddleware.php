@@ -39,11 +39,14 @@ class LeadTrackerMiddleware
 
             foreach (config('lead-tracker.requests_to_capture') as $requestToCaptureData) {
 
-                if (strtolower($request->getMethod()) == strtolower($requestToCaptureData['method']) &&
-                    strtolower($request->path()) == strtolower(trim($requestToCaptureData['path'], '/'))) {
+                // load data map
+                $inputDataMap = $requestToCaptureData['input_data_map'];
 
-                    // load data map
-                    $inputDataMap = $requestToCaptureData['input_data_map'];
+                if (strtolower($request->getMethod()) == strtolower($requestToCaptureData['method']) &&
+                    strtolower($request->path()) == strtolower(trim($requestToCaptureData['path'], '/')) &&
+                    strtolower($request->get($inputDataMap['form_name'])) ==
+                    strtolower($requestToCaptureData['form_name'])) {
+
 
                     // fail if there is no input map
                     if (empty($inputDataMap)) {

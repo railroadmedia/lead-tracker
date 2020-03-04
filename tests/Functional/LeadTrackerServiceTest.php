@@ -165,6 +165,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 [
                     'path' => $formPath,
                     'method' => $formMethod,
+                    'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
                         'maropost_tag_name' => 'my_maropost_tag_name_input_name',
@@ -228,6 +229,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 [
                     'path' => $formPath,
                     'method' => $formMethod,
+                    'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
                         'maropost_tag_name' => 'my_maropost_tag_name_input_name',
@@ -285,6 +287,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 [
                     'path' => $formPath,
                     'method' => $formMethod,
+                    'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
                         'maropost_tag_name' => 'my_maropost_tag_name_input_name',
@@ -346,6 +349,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 [
                     'path' => $formPath,
                     'method' => $formMethod,
+                    'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
                         'maropost_tag_name' => 'my_maropost_tag_name_input_name',
