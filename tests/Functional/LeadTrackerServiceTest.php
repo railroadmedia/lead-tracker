@@ -30,26 +30,30 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $data =
             [
                 'email' => $this->faker->email,
-                'maropost_tag_name' => $this->faker->words(2, true),
                 'form_name' => $this->faker->words(2, true),
                 'form_page_url' => $this->faker->url,
-                'utm_source' => $this->faker->word . rand(),
-                'utm_medium' => $this->faker->word . rand(),
-                'utm_campaign' => $this->faker->word . rand(),
+                'utm_source' => $this->faker->word.rand(),
+                'utm_medium' => $this->faker->word.rand(),
+                'utm_campaign' => $this->faker->word.rand(),
                 'utm_term' => $this->faker->words(2, true),
+                'maropost_tag_name' => $this->faker->words(2, true),
+                'customer_io_customer_id' => md5($this->faker->words(2, true).rand()),
+                'customer_io_event_name' => $this->faker->words(2, true),
             ];
 
         $this->expectsEvents([LeadTracked::class]);
 
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
-            $data['maropost_tag_name'],
             $data['form_name'],
             $data['form_page_url'],
             $data['utm_source'],
             $data['utm_medium'],
             $data['utm_campaign'],
-            $data['utm_term']
+            $data['utm_term'],
+            $data['maropost_tag_name'],
+            $data['customer_io_customer_id'],
+            $data['customer_io_event_name']
         );
 
         $this->assertEquals(
@@ -65,26 +69,30 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $data =
             [
                 'email' => $this->faker->email,
-                'maropost_tag_name' => $this->faker->words(2, true),
                 'form_name' => $this->faker->words(2, true),
                 'form_page_url' => $this->faker->url,
                 'utm_source' => null,
                 'utm_medium' => null,
                 'utm_campaign' => null,
                 'utm_term' => null,
+                'maropost_tag_name' => $this->faker->words(2, true),
+                'customer_io_customer_id' => md5($this->faker->words(2, true).rand()),
+                'customer_io_event_name' => $this->faker->words(2, true),
             ];
 
         $this->expectsEvents([LeadTracked::class]);
 
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
-            $data['maropost_tag_name'],
             $data['form_name'],
             $data['form_page_url'],
             $data['utm_source'],
             $data['utm_medium'],
             $data['utm_campaign'],
-            $data['utm_term']
+            $data['utm_term'],
+            $data['maropost_tag_name'],
+            $data['customer_io_customer_id'],
+            $data['customer_io_event_name']
         );
 
         $this->assertEquals(
@@ -110,37 +118,43 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $data =
             [
                 'email' => $this->faker->email,
-                'maropost_tag_name' => $this->faker->words(2, true),
                 'form_name' => $this->faker->words(2, true),
                 'form_page_url' => $this->faker->url,
-                'utm_source' => $this->faker->word . rand(),
-                'utm_medium' => $this->faker->word . rand(),
-                'utm_campaign' => $this->faker->word . rand(),
+                'utm_source' => $this->faker->word.rand(),
+                'utm_medium' => $this->faker->word.rand(),
+                'utm_campaign' => $this->faker->word.rand(),
                 'utm_term' => $this->faker->words(2, true),
+                'maropost_tag_name' => $this->faker->words(2, true),
+                'customer_io_customer_id' => md5($this->faker->words(2, true).rand()),
+                'customer_io_event_name' => $this->faker->words(2, true),
             ];
 
         $this->expectsEvents([LeadTracked::class]);
 
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
-            $data['maropost_tag_name'],
             $data['form_name'],
             $data['form_page_url'],
             $data['utm_source'],
             $data['utm_medium'],
             $data['utm_campaign'],
-            $data['utm_term']
+            $data['utm_term'],
+            $data['maropost_tag_name'],
+            $data['customer_io_customer_id'],
+            $data['customer_io_event_name']
         );
 
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
-            $data['maropost_tag_name'],
             $data['form_name'],
             $data['form_page_url'],
             $data['utm_source'],
             $data['utm_medium'],
             $data['utm_campaign'],
-            $data['utm_term']
+            $data['utm_term'],
+            $data['maropost_tag_name'],
+            $data['customer_io_customer_id'],
+            $data['customer_io_event_name']
         );
 
         $this->assertEquals(
@@ -158,6 +172,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $formMethod = 'post';
         $formName = 'my lead form';
         $maropostTagName = 'my-tag';
+        $customerIoCustomerId = 'my-customer-id';
+        $customerIoEventName = 'my-customer-event-name';
 
         config()->set(
             'lead-tracker.requests_to_capture',
@@ -168,12 +184,14 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'form_name' => 'other-form-name-not-to-track',
                     'input_data_map' => [
                         'email' => 'other_my_email_input_name',
-                        'maropost_tag_name' => 'other_my_maropost_tag_name_input_name',
                         'form_name' => 'other_my_form_name_input_name',
                         'utm_source' => 'other_my_utm_source_input_name',
                         'utm_medium' => 'other_my_utm_medium_input_name',
                         'utm_campaign' => 'other_my_utm_campaign_input_name',
                         'utm_term' => 'other_my_utm_term_input_name',
+                        'maropost_tag_name' => 'other_my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'other_my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'other_my_customer_id_event_name_input_name',
                     ],
                 ],
                 [
@@ -182,12 +200,14 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
-                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
                         'form_name' => 'my_form_name_input_name',
                         'utm_source' => 'my_utm_source_input_name',
                         'utm_medium' => 'my_utm_medium_input_name',
                         'utm_campaign' => 'my_utm_campaign_input_name',
                         'utm_term' => 'my_utm_term_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'my_customer_id_event_name_input_name',
                     ],
                 ],
             ]
@@ -195,9 +215,9 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
 
         $data =
             [
-                'utm_source' => $this->faker->word . rand(),
-                'utm_medium' => $this->faker->word . rand(),
-                'utm_campaign' => $this->faker->word . rand(),
+                'utm_source' => $this->faker->word.rand(),
+                'utm_medium' => $this->faker->word.rand(),
+                'utm_campaign' => $this->faker->word.rand(),
                 'utm_term' => $this->faker->words(2, true),
             ];
 
@@ -211,20 +231,24 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         );
 
         $inputArray = LeadTrackerService::getRequestTrackingInputArrayFromRequest(
+            $formName,
             $formPath,
             $formMethod,
             $maropostTagName,
-            $formName
+            $customerIoCustomerId,
+            $customerIoEventName
         );
 
         $this->assertEquals(
             [
-                'my_maropost_tag_name_input_name' => 'my-tag',
                 'my_form_name_input_name' => 'my lead form',
                 'my_utm_source_input_name' => $data['utm_source'],
                 'my_utm_medium_input_name' => $data['utm_medium'],
                 'my_utm_campaign_input_name' => $data['utm_campaign'],
                 'my_utm_term_input_name' => $data['utm_term'],
+                'my_maropost_tag_name_input_name' => 'my-tag',
+                'my_customer_id_customer_id_input_name' => 'my-customer-id',
+                'my_customer_id_event_name_input_name' => 'my-customer-event-name',
             ],
             $inputArray
         );
@@ -236,6 +260,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $formMethod = 'post';
         $formName = 'my lead form';
         $maropostTagName = 'my-tag';
+        $customerIoCustomerId = 'my-customer-id';
+        $customerIoEventName = 'my-customer-event-name';
 
         config()->set(
             'lead-tracker.requests_to_capture',
@@ -246,12 +272,14 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
-                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
                         'form_name' => 'my_form_name_input_name',
                         'utm_source' => 'my_utm_source_input_name',
                         'utm_medium' => 'my_utm_medium_input_name',
                         'utm_campaign' => 'my_utm_campaign_input_name',
                         'utm_term' => 'my_utm_term_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'my_customer_id_event_name_input_name',
                     ],
                 ],
             ]
@@ -269,20 +297,24 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         );
 
         $inputArray = LeadTrackerService::getRequestTrackingInputArrayFromRequest(
+            $formName,
             $formPath,
             $formMethod,
             $maropostTagName,
-            $formName
+            $customerIoCustomerId,
+            $customerIoEventName
         );
 
         $this->assertEquals(
             [
-                'my_maropost_tag_name_input_name' => 'my-tag',
                 'my_form_name_input_name' => 'my lead form',
                 'my_utm_source_input_name' => $data['utm_source'] ?? null,
                 'my_utm_medium_input_name' => $data['utm_medium'] ?? null,
                 'my_utm_campaign_input_name' => $data['utm_campaign'] ?? null,
                 'my_utm_term_input_name' => $data['utm_term'] ?? null,
+                'my_maropost_tag_name_input_name' => 'my-tag',
+                'my_customer_id_customer_id_input_name' => 'my-customer-id',
+                'my_customer_id_event_name_input_name' => 'my-customer-event-name',
             ],
             $inputArray
         );
@@ -294,6 +326,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $formMethod = 'post';
         $formName = 'my lead form';
         $maropostTagName = 'my-tag';
+        $customerIoCustomerId = 'my-customer-id';
+        $customerIoEventName = 'my-customer-event-name';
 
         config()->set(
             'lead-tracker.requests_to_capture',
@@ -304,12 +338,14 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
-                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
                         'form_name' => 'my_form_name_input_name',
                         'utm_source' => 'my_utm_source_input_name',
                         'utm_medium' => 'my_utm_medium_input_name',
                         'utm_campaign' => 'my_utm_campaign_input_name',
                         'utm_term' => 'my_utm_term_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'my_customer_id_event_name_input_name',
                     ],
                 ],
             ]
@@ -317,9 +353,9 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
 
         $data =
             [
-                'utm_source' => $this->faker->word . rand(),
-                'utm_medium' => $this->faker->word . rand(),
-                'utm_campaign' => $this->faker->word . rand(),
+                'utm_source' => $this->faker->word.rand(),
+                'utm_medium' => $this->faker->word.rand(),
+                'utm_campaign' => $this->faker->word.rand(),
                 'utm_term' => $this->faker->words(2, true),
             ];
 
@@ -333,19 +369,23 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         );
 
         $inputArray = LeadTrackerService::getRequestTrackingInputsHtmlFromRequest(
+            $formName,
             $formPath,
             $formMethod,
             $maropostTagName,
-            $formName
+            $customerIoCustomerId,
+            $customerIoEventName
         );
 
         $this->assertEquals(
-            "<input type='hidden' name='my_maropost_tag_name_input_name' value='my-tag'>\n" .
-            "<input type='hidden' name='my_form_name_input_name' value='my lead form'>\n" .
-            "<input type='hidden' name='my_utm_source_input_name' value='" . $data['utm_source'] . "'>\n" .
-            "<input type='hidden' name='my_utm_medium_input_name' value='" . $data['utm_medium'] . "'>\n" .
-            "<input type='hidden' name='my_utm_campaign_input_name' value='" . $data['utm_campaign'] . "'>\n" .
-            "<input type='hidden' name='my_utm_term_input_name' value='" . $data['utm_term'] . "'>\n",
+            "<input type='hidden' name='my_form_name_input_name' value='my lead form'>\n".
+            "<input type='hidden' name='my_utm_source_input_name' value='".$data['utm_source']."'>\n".
+            "<input type='hidden' name='my_utm_medium_input_name' value='".$data['utm_medium']."'>\n".
+            "<input type='hidden' name='my_utm_campaign_input_name' value='".$data['utm_campaign']."'>\n".
+            "<input type='hidden' name='my_utm_term_input_name' value='".$data['utm_term']."'>\n".
+            "<input type='hidden' name='my_maropost_tag_name_input_name' value='my-tag'>\n".
+            "<input type='hidden' name='my_customer_id_customer_id_input_name' value='my-customer-id'>\n".
+            "<input type='hidden' name='my_customer_id_event_name_input_name' value='my-customer-event-name'>\n",
             $inputArray
         );
     }
@@ -356,6 +396,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $formMethod = 'post';
         $formName = 'my lead form';
         $maropostTagName = 'my-tag';
+        $customerIoCustomerId = 'my-customer-id';
+        $customerIoEventName = 'my-customer-event-name';
 
         config()->set(
             'lead-tracker.requests_to_capture',
@@ -366,12 +408,14 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
-                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
                         'form_name' => 'my_form_name_input_name',
                         'utm_source' => 'my_utm_source_input_name',
                         'utm_medium' => 'my_utm_medium_input_name',
                         'utm_campaign' => 'my_utm_campaign_input_name',
                         'utm_term' => 'my_utm_term_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'my_customer_id_event_name_input_name',
                     ],
                 ],
             ]
@@ -389,15 +433,19 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         );
 
         $inputArray = LeadTrackerService::getRequestTrackingInputsHtmlFromRequest(
+            $formName,
             $formPath,
             $formMethod,
             $maropostTagName,
-            $formName
+            $customerIoCustomerId,
+            $customerIoEventName
         );
 
         $this->assertEquals(
-            "<input type='hidden' name='my_maropost_tag_name_input_name' value='my-tag'>\n" .
-            "<input type='hidden' name='my_form_name_input_name' value='my lead form'>\n",
+            "<input type='hidden' name='my_form_name_input_name' value='my lead form'>\n".
+            "<input type='hidden' name='my_maropost_tag_name_input_name' value='my-tag'>\n".
+            "<input type='hidden' name='my_customer_id_customer_id_input_name' value='my-customer-id'>\n".
+            "<input type='hidden' name='my_customer_id_event_name_input_name' value='my-customer-event-name'>\n",
             $inputArray
         );
     }

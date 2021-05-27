@@ -75,13 +75,15 @@ class LeadTrackerMiddleware
 
                     $this->leadTrackerService->trackLead(
                         $request->get($inputDataMap['email']),
-                        $request->get($inputDataMap['maropost_tag_name']),
                         $request->get($inputDataMap['form_name']),
                         $request->header('referer', ''),
                         $request->get($inputDataMap['utm_source']),
                         $request->get($inputDataMap['utm_medium']),
                         $request->get($inputDataMap['utm_campaign']),
-                        $request->get($inputDataMap['utm_term'])
+                        $request->get($inputDataMap['utm_term']),
+                        $request->get($inputDataMap['maropost_tag_name']),
+                        $request->get($inputDataMap['customer_io_customer_id']),
+                        $request->get($inputDataMap['customer_io_event_name'])
                     );
 
                     return $next($request);

@@ -20,12 +20,14 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         $data =
             [
                 'my_email_input_name' => $this->faker->email,
-                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
                 'my_form_name_input_name' => $this->faker->words(2, true),
                 'my_utm_source_input_name' => $this->faker->word . rand(),
                 'my_utm_medium_input_name' => $this->faker->word . rand(),
                 'my_utm_campaign_input_name' => $this->faker->word . rand(),
                 'my_utm_term_input_name' => $this->faker->words(2, true),
+                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
+                'my_customer_id_customer_id_input_name' => md5($this->faker->words(2, true).rand()),
+                'my_customer_id_event_name_input_name' => $this->faker->words(2, true),
             ];
 
         config()->set(
@@ -37,12 +39,14 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                     'form_name' => $data['my_form_name_input_name'],
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
-                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
                         'form_name' => 'my_form_name_input_name',
                         'utm_source' => 'my_utm_source_input_name',
                         'utm_medium' => 'my_utm_medium_input_name',
                         'utm_campaign' => 'my_utm_campaign_input_name',
                         'utm_term' => 'my_utm_term_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'my_customer_id_event_name_input_name',
                     ],
                 ],
             ]
@@ -68,16 +72,19 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
             [
                 'brand' => $brand,
                 'email' => $data['my_email_input_name'],
-                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
                 'form_name' => $data['my_form_name_input_name'],
                 'form_page_url' => $formPageUrl,
                 'utm_source' => $data['my_utm_source_input_name'],
                 'utm_medium' => $data['my_utm_medium_input_name'],
                 'utm_campaign' => $data['my_utm_campaign_input_name'],
                 'utm_term' => $data['my_utm_term_input_name'],
+                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
+                'customer_io_customer_id' => $data['my_customer_id_customer_id_input_name'],
+                'customer_io_event_name' => $data['my_customer_id_event_name_input_name'],
             ]
         );
     }
+
     public function test_capture_request_success_no_referer()
     {
         $brand = $this->faker->word;
@@ -90,12 +97,14 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         $data =
             [
                 'my_email_input_name' => $this->faker->email,
-                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
                 'my_form_name_input_name' => $this->faker->words(2, true),
                 'my_utm_source_input_name' => $this->faker->word . rand(),
                 'my_utm_medium_input_name' => $this->faker->word . rand(),
                 'my_utm_campaign_input_name' => $this->faker->word . rand(),
                 'my_utm_term_input_name' => $this->faker->words(2, true),
+                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
+                'my_customer_id_customer_id_input_name' => md5($this->faker->words(2, true).rand()),
+                'my_customer_id_event_name_input_name' => $this->faker->words(2, true),
             ];
 
         config()->set(
@@ -107,12 +116,14 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                     'form_name' => $data['my_form_name_input_name'],
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
-                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
                         'form_name' => 'my_form_name_input_name',
                         'utm_source' => 'my_utm_source_input_name',
                         'utm_medium' => 'my_utm_medium_input_name',
                         'utm_campaign' => 'my_utm_campaign_input_name',
                         'utm_term' => 'my_utm_term_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'my_customer_id_event_name_input_name',
                     ],
                 ],
             ]
@@ -137,13 +148,15 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
             [
                 'brand' => $brand,
                 'email' => $data['my_email_input_name'],
-                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
                 'form_name' => $data['my_form_name_input_name'],
                 'form_page_url' => $formPageUrl,
                 'utm_source' => $data['my_utm_source_input_name'],
                 'utm_medium' => $data['my_utm_medium_input_name'],
                 'utm_campaign' => $data['my_utm_campaign_input_name'],
                 'utm_term' => $data['my_utm_term_input_name'],
+                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
+                'customer_io_customer_id' => $data['my_customer_id_customer_id_input_name'],
+                'customer_io_event_name' => $data['my_customer_id_event_name_input_name'],
             ]
         );
     }
@@ -162,12 +175,14 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         $data =
             [
                 'my_email_input_name' => $this->faker->email,
-                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
                 'my_form_name_input_name' => $formName,
                 'my_utm_source_input_name' => $this->faker->word . rand(),
                 'my_utm_medium_input_name' => $this->faker->word . rand(),
                 'my_utm_campaign_input_name' => $this->faker->word . rand(),
                 'my_utm_term_input_name' => $this->faker->words(2, true),
+                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
+                'my_customer_id_customer_id_input_name' => md5($this->faker->words(2, true).rand()),
+                'my_customer_id_event_name_input_name' => $this->faker->words(2, true),
             ];
 
 
@@ -180,12 +195,14 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                     'form_name' => 'my-other-form-that-should-not-be-tracked',
                     'input_data_map' => [
                         'email' => 'other_my_email_input_name',
-                        'maropost_tag_name' => 'other_my_maropost_tag_name_input_name',
                         'form_name' => 'other_my_form_name_input_name',
                         'utm_source' => 'other_my_utm_source_input_name',
                         'utm_medium' => 'other_my_utm_medium_input_name',
                         'utm_campaign' => 'other_my_utm_campaign_input_name',
                         'utm_term' => 'other_my_utm_term_input_name',
+                        'maropost_tag_name' => 'other_my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'other_my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'other_my_customer_id_event_name_input_name',
                     ],
                 ],
                 [
@@ -194,12 +211,14 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                     'form_name' => $formName,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
-                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
                         'form_name' => 'my_form_name_input_name',
                         'utm_source' => 'my_utm_source_input_name',
                         'utm_medium' => 'my_utm_medium_input_name',
                         'utm_campaign' => 'my_utm_campaign_input_name',
                         'utm_term' => 'my_utm_term_input_name',
+                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
+                        'customer_io_customer_id' => 'my_customer_id_customer_id_input_name',
+                        'customer_io_event_name' => 'my_customer_id_event_name_input_name',
                     ],
                 ],
             ]
@@ -225,13 +244,15 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
             [
                 'brand' => $brand,
                 'email' => $data['my_email_input_name'],
-                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
                 'form_name' => $data['my_form_name_input_name'],
                 'form_page_url' => $formPageUrl,
                 'utm_source' => $data['my_utm_source_input_name'],
                 'utm_medium' => $data['my_utm_medium_input_name'],
                 'utm_campaign' => $data['my_utm_campaign_input_name'],
                 'utm_term' => $data['my_utm_term_input_name'],
+                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
+                'customer_io_customer_id' => $data['my_customer_id_customer_id_input_name'],
+                'customer_io_event_name' => $data['my_customer_id_event_name_input_name'],
             ]
         );
     }
@@ -378,7 +399,6 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
         $data =
             [
                 'leadtracker_email' => $this->faker->email,
-
                 'leadtracker_form_name' => $this->faker->words(2, true),
                 'leadtracker_utm_source' => $this->faker->word . rand(),
                 'leadtracker_utm_medium' => $this->faker->word . rand(),
