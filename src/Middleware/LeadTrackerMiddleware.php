@@ -34,6 +34,18 @@ class LeadTrackerMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        return $next($request);
+    }
+
+    /**
+     * Handle tasks after the response has been sent to the browser.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Response  $response
+     * @return void
+     */
+    public function terminate($request, $response = null)
+    {
         // we'll wrap the entire thing in a try catch since we do not want this system to ever stop execution
         try {
 
@@ -47,7 +59,6 @@ class LeadTrackerMiddleware
                     strtolower($request->get($inputDataMap['form_name'])) ==
                     strtolower($requestToCaptureData['form_name'])) {
 
-
                     // fail if there is no input map
                     if (empty($inputDataMap)) {
                         error_log('Failed to track lead (LeadTracker) input data map is missing for request.');
@@ -58,19 +69,18 @@ class LeadTrackerMiddleware
                             var_export($request->all(), true)
                         );
 
-                        return $next($request);
+                        return;
                     }
 
                     // check all the data we need exists
                     if (empty($request->get($inputDataMap['email'])) ||
-                        empty($request->get($inputDataMap['maropost_tag_name'])) ||
                         empty($request->get($inputDataMap['form_name']))) {
 
                         // we cannot track this request due to missing information
                         error_log('Failed to track lead (LeadTracker) some required data is missing from the request.');
                         error_log('Request data: ' . var_export($request->all(), true));
 
-                        return $next($request);
+                        return;
                     }
 
                     $this->leadTrackerService->trackLead(
@@ -80,13 +90,10 @@ class LeadTrackerMiddleware
                         $request->get($inputDataMap['utm_source']),
                         $request->get($inputDataMap['utm_medium']),
                         $request->get($inputDataMap['utm_campaign']),
-                        $request->get($inputDataMap['utm_term']),
-                        $request->get($inputDataMap['maropost_tag_name']),
-                        $request->get($inputDataMap['customer_io_customer_id']),
-                        $request->get($inputDataMap['customer_io_event_name'])
+                        $request->get($inputDataMap['utm_term'])
                     );
 
-                    return $next($request);
+                    return;
                 }
             }
 
@@ -94,7 +101,5 @@ class LeadTrackerMiddleware
             error_log('Failed to track lead (LeadTracker) due to exception.');
             error_log($throwable);
         }
-
-        return $next($request);
     }
 }

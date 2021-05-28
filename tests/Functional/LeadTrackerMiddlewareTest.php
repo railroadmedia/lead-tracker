@@ -25,9 +25,6 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 'my_utm_medium_input_name' => $this->faker->word . rand(),
                 'my_utm_campaign_input_name' => $this->faker->word . rand(),
                 'my_utm_term_input_name' => $this->faker->words(2, true),
-                'my_maropost_tag_name_input_name' => $this->faker->words(2, true),
-                'my_customer_id_customer_id_input_name' => md5($this->faker->words(2, true).rand()),
-                'my_customer_id_event_name_input_name' => $this->faker->words(2, true),
             ];
 
         config()->set(
@@ -44,9 +41,6 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                         'utm_medium' => 'my_utm_medium_input_name',
                         'utm_campaign' => 'my_utm_campaign_input_name',
                         'utm_term' => 'my_utm_term_input_name',
-                        'maropost_tag_name' => 'my_maropost_tag_name_input_name',
-                        'customer_io_customer_id' => 'my_customer_id_customer_id_input_name',
-                        'customer_io_event_name' => 'my_customer_id_event_name_input_name',
                     ],
                 ],
             ]
@@ -60,7 +54,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
          */
         $middleware = app()->make(LeadTrackerMiddleware::class);
 
-        $middleware->handle(
+        $middleware->terminate(
             $request,
             function ($req) {
                 $this->assertEquals(true, true);
@@ -78,9 +72,6 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 'utm_medium' => $data['my_utm_medium_input_name'],
                 'utm_campaign' => $data['my_utm_campaign_input_name'],
                 'utm_term' => $data['my_utm_term_input_name'],
-                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
-                'customer_io_customer_id' => $data['my_customer_id_customer_id_input_name'],
-                'customer_io_event_name' => $data['my_customer_id_event_name_input_name'],
             ]
         );
     }
@@ -136,7 +127,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
          */
         $middleware = app()->make(LeadTrackerMiddleware::class);
 
-        $middleware->handle(
+        $middleware->terminate(
             $request,
             function ($req) {
                 $this->assertEquals(true, true);
@@ -154,9 +145,6 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 'utm_medium' => $data['my_utm_medium_input_name'],
                 'utm_campaign' => $data['my_utm_campaign_input_name'],
                 'utm_term' => $data['my_utm_term_input_name'],
-                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
-                'customer_io_customer_id' => $data['my_customer_id_customer_id_input_name'],
-                'customer_io_event_name' => $data['my_customer_id_event_name_input_name'],
             ]
         );
     }
@@ -232,7 +220,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
          */
         $middleware = app()->make(LeadTrackerMiddleware::class);
 
-        $middleware->handle(
+        $middleware->terminate(
             $request,
             function ($req) {
                 $this->assertEquals(true, true);
@@ -250,9 +238,6 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
                 'utm_medium' => $data['my_utm_medium_input_name'],
                 'utm_campaign' => $data['my_utm_campaign_input_name'],
                 'utm_term' => $data['my_utm_term_input_name'],
-                'maropost_tag_name' => $data['my_maropost_tag_name_input_name'],
-                'customer_io_customer_id' => $data['my_customer_id_customer_id_input_name'],
-                'customer_io_event_name' => $data['my_customer_id_event_name_input_name'],
             ]
         );
     }
@@ -310,7 +295,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
          */
         $middleware = app()->make(LeadTrackerMiddleware::class);
 
-        $middleware->handle(
+        $middleware->terminate(
             $request,
             function ($req) {
             }
@@ -364,7 +349,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
          */
         $middleware = app()->make(LeadTrackerMiddleware::class);
 
-        $middleware->handle(
+        $middleware->terminate(
             $request,
             function ($req) {
             }
@@ -389,7 +374,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
          */
         $middleware = app()->make(LeadTrackerMiddleware::class);
 
-        $middleware->handle(
+        $middleware->terminate(
             $request,
             function ($req) {
             }
@@ -413,7 +398,7 @@ class LeadTrackerMiddlewareTest extends LeadTrackerTestCase
          */
         $middleware = app()->make(LeadTrackerMiddleware::class);
 
-        $middleware->handle(
+        $middleware->terminate(
             $request,
             function ($req) {
             }

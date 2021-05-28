@@ -35,9 +35,6 @@ class LeadTrackerService
      * @param  string|null  $utmMedium
      * @param  string|null  $utmCampaign
      * @param  string|null  $utmTerm
-     * @param  string|null  $maropostTagName
-     * @param  string|null  $customerIoCustomerId
-     * @param  string|null  $customerIoEventName
      * @return array
      */
     public function trackLead(
@@ -47,10 +44,7 @@ class LeadTrackerService
         $utmSource = null,
         $utmMedium = null,
         $utmCampaign = null,
-        $utmTerm = null,
-        $maropostTagName = null,
-        $customerIoCustomerId = null,
-        $customerIoEventName = null
+        $utmTerm = null
     ) {
         $dataArray = [
             'brand' => config('lead-tracker.brand'),
@@ -61,9 +55,6 @@ class LeadTrackerService
             'utm_medium' => $utmMedium,
             'utm_campaign' => $utmCampaign,
             'utm_term' => $utmTerm,
-            'maropost_tag_name' => $maropostTagName,
-            'customer_io_customer_id' => $customerIoCustomerId,
-            'customer_io_event_name' => $customerIoEventName,
         ];
 
         if (!$this->databaseConnection->table('leadtracker_leads')->where($dataArray)->exists()) {
@@ -79,6 +70,8 @@ class LeadTrackerService
 
         $databaseArray = (array)$this->databaseConnection->table('leadtracker_leads')->where($dataArray)->first();
 
+        unset($databaseArray['maropost_tag_name']);
+
         event(new LeadTracked($databaseArray));
 
         return $databaseArray;
@@ -93,18 +86,12 @@ class LeadTrackerService
      * @param  string  $formName
      * @param  string  $formSubmitPath
      * @param  string  $formSubmitMethod
-     * @param  string|null  $maropostTagName
-     * @param  string|null  $customerIoCustomerId
-     * @param  string|null  $customerIoEventName
      * @return array
      */
     public static function getRequestTrackingInputArrayFromRequest(
         $formName,
         $formSubmitPath,
-        $formSubmitMethod,
-        $maropostTagName = null,
-        $customerIoCustomerId = null,
-        $customerIoEventName = null
+        $formSubmitMethod
     ) {
         $request = request();
 
@@ -120,9 +107,6 @@ class LeadTrackerService
                     $inputDataMap['utm_medium'] => $request->get('utm_medium'),
                     $inputDataMap['utm_campaign'] => $request->get('utm_campaign'),
                     $inputDataMap['utm_term'] => $request->get('utm_term'),
-                    $inputDataMap['maropost_tag_name'] => $maropostTagName,
-                    $inputDataMap['customer_io_customer_id'] => $customerIoCustomerId,
-                    $inputDataMap['customer_io_event_name'] => $customerIoEventName,
                 ];
             }
         }
@@ -136,26 +120,17 @@ class LeadTrackerService
      * @param $formName
      * @param $formSubmitPath
      * @param $formSubmitMethod
-     * @param $maropostTagName
-     * @param $customerIoCustomerId
-     * @param $customerIoEventName
      * @return string
      */
     public static function getRequestTrackingInputsHtmlFromRequest(
         $formName,
         $formSubmitPath,
-        $formSubmitMethod,
-        $maropostTagName,
-        $customerIoCustomerId,
-        $customerIoEventName
+        $formSubmitMethod
     ) {
         $inputArray = self::getRequestTrackingInputArrayFromRequest(
             $formName,
             $formSubmitPath,
-            $formSubmitMethod,
-            $maropostTagName,
-            $customerIoCustomerId,
-            $customerIoEventName
+            $formSubmitMethod
         );
 
         $html = '';

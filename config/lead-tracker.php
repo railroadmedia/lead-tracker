@@ -30,9 +30,6 @@ return [
                 'utm_medium' => 'my_utm_medium_input_name',
                 'utm_campaign' => 'my_utm_campaign_input_name',
                 'utm_term' => 'my_utm_term_input_name',
-                'maropost_tag_name' => 'my_maropost_tag_name_input_name',
-                'customer_io_customer_id' => 'my_maropost_tag_name_input_name',
-                'customer_io_event_name' => 'my_maropost_tag_name_input_name',
             ],
         ],
         [
@@ -47,9 +44,6 @@ return [
                 'utm_medium' => 'my_other_utm_medium_input_name',
                 'utm_campaign' => 'my_other_utm_campaign_input_name',
                 'utm_term' => 'my_other_utm_term_input_name',
-                'maropost_tag_name' => 'my_maropost_tag_name_input_name',
-                'customer_io_customer_id' => 'my_maropost_tag_name_input_name',
-                'customer_io_event_name' => 'my_maropost_tag_name_input_name',
             ],
         ],
     ]

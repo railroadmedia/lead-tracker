@@ -18,9 +18,6 @@ class LeadTracked
      *    'utm_medium' => string // nullable
      *    'utm_campaign' => string // nullable
      *    'utm_term' => string // nullable
-     *    'maropost_tag_name' => string // nullable
-     *    'customer_io_customer_id' => string // nullable
-     *    'customer_io_event_name' => string // nullable
      * ];
      *
      * @var null|array
