@@ -57,7 +57,8 @@ class LeadTrackerMiddleware
                 if (strtolower($request->getMethod()) == strtolower($requestToCaptureData['method']) &&
                     strtolower($request->path()) == strtolower(trim($requestToCaptureData['path'], '/')) &&
                     strtolower($request->get($inputDataMap['form_name'])) ==
-                    strtolower($requestToCaptureData['form_name'])) {
+                    strtolower($requestToCaptureData['form_name']) &&
+                    config('lead-tracker.brand') == $requestToCaptureData['brand']) {
 
                     // fail if there is no input map
                     if (empty($inputDataMap)) {

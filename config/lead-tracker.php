@@ -20,6 +20,7 @@ return [
             'path' => '/my-form-submission-path',
             'method' => 'post',
             'form_name' => 'my-lead-form-1',
+            'brand' => 'brand-1',
 
             // since different forms may have different input names it must be configurable
             // these keys must all be set for every request you wish to capture
@@ -35,7 +36,23 @@ return [
         [
             'path' => '/my-other-form-submission-path',
             'method' => 'put',
-            'form_name' => 'my-lead-form-2',
+            'form_name' => 'my-lead-form',
+            'brand' => 'brand-2',
+
+            'input_data_map' => [
+                'email' => 'my_other_email_input_name',
+                'form_name' => 'my_other_form_name_input_name',
+                'utm_source' => 'my_other_utm_source_input_name',
+                'utm_medium' => 'my_other_utm_medium_input_name',
+                'utm_campaign' => 'my_other_utm_campaign_input_name',
+                'utm_term' => 'my_other_utm_term_input_name',
+            ],
+        ],
+        [
+            'path' => '/my-other-form-submission-path',
+            'method' => 'put',
+            'form_name' => 'my-lead-form',
+            'brand' => 'brand-3',
 
             'input_data_map' => [
                 'email' => 'my_other_email_input_name',

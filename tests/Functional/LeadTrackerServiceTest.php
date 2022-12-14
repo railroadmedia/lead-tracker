@@ -28,6 +28,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         Event::fake();
 
         $brand = $this->faker->word;
+
+        config()->set('lead-tracker.brand', $brand);
         config()->set('lead-tracker.brand', $brand);
 
         $data =
@@ -108,6 +110,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         Event::fake();
 
         $brand = $this->faker->word;
+
+        config()->set('lead-tracker.brand', $brand);
         config()->set('lead-tracker.brand', $brand);
 
         $data =
@@ -157,6 +161,9 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $formPath = '/test-path';
         $formMethod = 'post';
         $formName = 'my lead form';
+        $brand = $this->faker->word;
+
+        config()->set('lead-tracker.brand', $brand);
 
         config()->set(
             'lead-tracker.requests_to_capture',
@@ -165,6 +172,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'path' => $formPath,
                     'method' => $formMethod,
                     'form_name' => 'other-form-name-not-to-track',
+                    'brand' => $brand,
                     'input_data_map' => [
                         'email' => 'other_my_email_input_name',
                         'form_name' => 'other_my_form_name_input_name',
@@ -178,6 +186,85 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'path' => $formPath,
                     'method' => $formMethod,
                     'form_name' => $formName,
+                    'brand' => $brand,
+                    'input_data_map' => [
+                        'email' => 'my_email_input_name',
+                        'form_name' => 'my_form_name_input_name',
+                        'utm_source' => 'my_utm_source_input_name',
+                        'utm_medium' => 'my_utm_medium_input_name',
+                        'utm_campaign' => 'my_utm_campaign_input_name',
+                        'utm_term' => 'my_utm_term_input_name',
+                    ],
+                ],
+            ]
+        );
+
+        $data =
+            [
+                'utm_source' => $this->faker->word.rand(),
+                'utm_medium' => $this->faker->word.rand(),
+                'utm_campaign' => $this->faker->word.rand(),
+                'utm_term' => $this->faker->words(2, true),
+            ];
+
+        $request = Request::create('https://www.leadtracker.com/my-lead-page', 'get', $data);
+
+        app()->bind(
+            'request',
+            function () use ($request) {
+                return $request;
+            }
+        );
+
+        $inputArray = LeadTrackerService::getRequestTrackingInputArrayFromRequest(
+            $formName,
+            $formPath,
+            $formMethod
+        );
+
+        $this->assertEquals(
+            [
+                'my_form_name_input_name' => 'my lead form',
+                'my_utm_source_input_name' => $data['utm_source'],
+                'my_utm_medium_input_name' => $data['utm_medium'],
+                'my_utm_campaign_input_name' => $data['utm_campaign'],
+                'my_utm_term_input_name' => $data['utm_term'],
+            ],
+            $inputArray
+        );
+    }
+
+    public function test_get_input_array_for_request_tracking_form_same_names_different_brand()
+    {
+        $formPath = '/test-path';
+        $formMethod = 'post';
+        $formName = 'my lead form';
+        $brand = $this->faker->word;
+
+        config()->set('lead-tracker.brand', $brand);
+
+        config()->set(
+            'lead-tracker.requests_to_capture',
+            [
+                [
+                    'path' => $formPath,
+                    'method' => $formMethod,
+                    'form_name' => 'other-form-name-not-to-track',
+                    'brand' => 'other-brand',
+                    'input_data_map' => [
+                        'email' => 'other_my_email_input_name',
+                        'form_name' => 'other_my_form_name_input_name',
+                        'utm_source' => 'other_my_utm_source_input_name',
+                        'utm_medium' => 'other_my_utm_medium_input_name',
+                        'utm_campaign' => 'other_my_utm_campaign_input_name',
+                        'utm_term' => 'other_my_utm_term_input_name',
+                    ],
+                ],
+                [
+                    'path' => $formPath,
+                    'method' => $formMethod,
+                    'form_name' => $formName,
+                    'brand' => $brand,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
                         'form_name' => 'my_form_name_input_name',
@@ -230,6 +317,9 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $formPath = '/test-path';
         $formMethod = 'post';
         $formName = 'my lead form';
+        $brand = $this->faker->word;
+
+        config()->set('lead-tracker.brand', $brand);
 
         config()->set(
             'lead-tracker.requests_to_capture',
@@ -238,6 +328,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'path' => $formPath,
                     'method' => $formMethod,
                     'form_name' => $formName,
+                    'brand' => $brand,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
                         'form_name' => 'my_form_name_input_name',
@@ -284,6 +375,9 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $formPath = '/test-path';
         $formMethod = 'post';
         $formName = 'my lead form';
+        $brand = $this->faker->word;
+
+        config()->set('lead-tracker.brand', $brand);
 
         config()->set(
             'lead-tracker.requests_to_capture',
@@ -292,6 +386,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'path' => $formPath,
                     'method' => $formMethod,
                     'form_name' => $formName,
+                    'brand' => $brand,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
                         'form_name' => 'my_form_name_input_name',
@@ -342,6 +437,9 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         $formPath = '/test-path';
         $formMethod = 'post';
         $formName = 'my lead form';
+        $brand = $this->faker->word;
+
+        config()->set('lead-tracker.brand', $brand);
 
         config()->set(
             'lead-tracker.requests_to_capture',
@@ -350,6 +448,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                     'path' => $formPath,
                     'method' => $formMethod,
                     'form_name' => $formName,
+                    'brand' => $brand,
                     'input_data_map' => [
                         'email' => 'my_email_input_name',
                         'form_name' => 'my_form_name_input_name',
