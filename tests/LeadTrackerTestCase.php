@@ -35,7 +35,7 @@ class LeadTrackerTestCase extends BaseTestCase
      */
     protected $router;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -90,50 +90,5 @@ class LeadTrackerTestCase extends BaseTestCase
 
         // service provider
         $app->register(LeadTrackerServiceProvider::class);
-    }
-
-    /**
-     * We don't want to use mockery so this is a reimplementation of the mockery version.
-     *
-     * @param array|string $events
-     * @return $this
-     */
-    public function expectsEvents($events)
-    {
-        $events = is_array($events) ? $events : func_get_args();
-
-        $mock =
-            $this->getMockBuilder(Dispatcher::class)
-                ->setMethods(['fire', 'dispatch'])
-                ->getMockForAbstractClass();
-
-        $mock->method('fire')
-            ->willReturnCallback(
-                function ($called) {
-                    $this->firedEvents[] = $called;
-                }
-            );
-
-        $mock->method('dispatch')
-            ->willReturnCallback(
-                function ($called) {
-                    $this->firedEvents[] = $called;
-                }
-            );
-
-        $this->app->instance('events', $mock);
-
-        $this->beforeApplicationDestroyed(
-            function () use ($events) {
-                $fired = $this->getFiredEvents($events);
-                if ($eventsNotFired = array_diff($events, $fired)) {
-                    throw new Exception(
-                        'These expected events were not fired: [' . implode(', ', $eventsNotFired) . ']'
-                    );
-                }
-            }
-        );
-
-        return $this;
     }
 }

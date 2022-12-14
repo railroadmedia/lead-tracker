@@ -4,6 +4,7 @@ namespace Railroad\LeadTracker\Tests\Functional;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Railroad\LeadTracker\Events\LeadTracked;
 use Railroad\LeadTracker\Services\LeadTrackerService;
 use Railroad\LeadTracker\Tests\LeadTrackerTestCase;
@@ -15,7 +16,7 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
      */
     private $leadTrackerService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -24,6 +25,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
 
     public function test_track_lead_success()
     {
+        Event::fake();
+
         $brand = $this->faker->word;
         config()->set('lead-tracker.brand', $brand);
 
@@ -37,8 +40,6 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 'utm_campaign' => $this->faker->word.rand(),
                 'utm_term' => $this->faker->words(2, true),
             ];
-
-        $this->expectsEvents([LeadTracked::class]);
 
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
@@ -56,10 +57,14 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         );
 
         $this->assertDatabaseHas('leadtracker_leads', $data);
+
+        Event::assertDispatched(LeadTracked::class);
     }
 
     public function test_track_lead_success_with_null()
     {
+        Event::fake();
+
         $data =
             [
                 'email' => $this->faker->email,
@@ -70,8 +75,6 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 'utm_campaign' => null,
                 'utm_term' => null,
             ];
-
-        $this->expectsEvents([LeadTracked::class]);
 
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
@@ -96,10 +99,14 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
         );
 
         $this->assertDatabaseHas('leadtracker_leads', $data);
+
+        Event::assertDispatched(LeadTracked::class);
     }
 
     public function test_track_lead_no_duplicates()
     {
+        Event::fake();
+
         $brand = $this->faker->word;
         config()->set('lead-tracker.brand', $brand);
 
@@ -113,8 +120,6 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
                 'utm_campaign' => $this->faker->word.rand(),
                 'utm_term' => $this->faker->words(2, true),
             ];
-
-        $this->expectsEvents([LeadTracked::class]);
 
         $inserted = $this->leadTrackerService->trackLead(
             $data['email'],
@@ -143,6 +148,8 @@ class LeadTrackerServiceTest extends LeadTrackerTestCase
 
         $this->assertDatabaseHas('leadtracker_leads', $data);
         $this->assertDatabaseMissing('leadtracker_leads', ['id' => 2]);
+
+        Event::assertDispatched(LeadTracked::class);
     }
 
     public function test_get_input_array_for_request_tracking_form()
