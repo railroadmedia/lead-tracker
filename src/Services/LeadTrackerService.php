@@ -7,24 +7,11 @@ namespace Railroad\LeadTracker\Services;
 use Carbon\Carbon;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Facades\DB;
 use Railroad\LeadTracker\Events\LeadTracked;
 
 class LeadTrackerService
 {
-    /**
-     * @var Connection
-     */
-    private $databaseConnection;
-
-    /**
-     * LeadTrackerService constructor.
-     * @param  DatabaseManager  $databaseManager
-     */
-    public function __construct(DatabaseManager $databaseManager)
-    {
-        $this->databaseConnection = $databaseManager->connection(config('lead-tracker.database_connection_name'));
-    }
-
     /**
      * Returns the info inserted or that already existed in the database as an array.
      *
@@ -57,8 +44,8 @@ class LeadTrackerService
             'utm_term' => $utmTerm,
         ];
 
-        if (!$this->databaseConnection->table('leadtracker_leads')->where($dataArray)->exists()) {
-            $this->databaseConnection->table('leadtracker_leads')->insert(
+        if (!DB::connection(config('lead-tracker.database_connection_name'))->table('leadtracker_leads')->where($dataArray)->exists()) {
+            DB::connection(config('lead-tracker.database_connection_name'))->table('leadtracker_leads')->insert(
                 array_merge(
                     $dataArray,
                     [
@@ -68,7 +55,7 @@ class LeadTrackerService
             );
         }
 
-        $databaseArray = (array)$this->databaseConnection->table('leadtracker_leads')->where($dataArray)->first();
+        $databaseArray = (array)DB::connection(config('lead-tracker.database_connection_name'))->table('leadtracker_leads')->where($dataArray)->first();
 
         unset($databaseArray['maropost_tag_name']);
 
