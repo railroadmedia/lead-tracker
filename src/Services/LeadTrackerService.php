@@ -125,7 +125,13 @@ class LeadTrackerService
 
         foreach ($inputArray as $inputName => $inputValue) {
             if (!empty($inputValue)) {
-                $html .= "<input type='hidden' name='$inputName' value='$inputValue'>\n";
+                if (is_array($inputValue)) {
+                    foreach ($inputValue as $key => $value) {
+                        $html .= "<input type='hidden' name='{$inputName}[{$key}]' value='{$value}'>\n";
+                    }
+                } else {
+                    $html .= "<input type='hidden' name='$inputName' value='$inputValue'>\n";
+                }
             }
         }
 
